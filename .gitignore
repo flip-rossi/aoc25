@@ -1,0 +1,10 @@
+.env
+inputs/example*.txt
+/target/
+/_build/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
