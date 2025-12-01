@@ -19,7 +19,7 @@ There are three helper scripts to prepare solutions, test, and submit answers:
   if none is specified).
 
 They both need you to have a .env file in the root of the project with a line like this: `SESSION_TOKEN=yoursessiontoken`  
-You can get your session token by looking at your cookies when logged on in the [AoC website](https://adventofcode.com).
+You can get your session token by looking at your cookies when logged on in the [AoC website](https://adventofcode.com/auth/login).
 
 **Don't let anyone have access to your session token.**
 
@@ -29,8 +29,9 @@ You can get your session token by looking at your cookies when logged on in the 
 > - lang - part 1 done in language;
 > - **lang** - parts 1 and 2 done in language.
 
-| Day                                                                    |  Languages                        |
-|------------------------------------------------------------------------|-----------------------------------|
+| Day                                                                    |  Languages                          |
+|------------------------------------------------------------------------|-------------------------------------|
+| [Day 1: Secret Entrance](https://adventofcode.com/2025/day/1)          | **[OCaml](./src/main/ml/day01.ml)** |
 
 
 # Previous years

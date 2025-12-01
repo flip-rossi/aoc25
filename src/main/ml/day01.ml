@@ -2,7 +2,7 @@
    Day 1 - Secret Entrance
    https://adventofcode.com/2025/day/1
    Start: 2025-12-01 12:30
-   Finish: TODO
+   Finish: 2025-12-01 13:36
 *)
 open! Core
 
@@ -32,7 +32,25 @@ let part1 moves =
 ;;
 
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
-let part2 _ = raise (Invalid_argument "Part 2 not solved yet.")
+let part2 moves =
+  let _, count =
+    List.fold moves ~init:(dial_init, 0) ~f:(fun (pos, count) dx ->
+      let new_pos = pos + dx in
+      let inc =
+        if dx = 0
+        then 0
+        else if new_pos = 0
+        then 1
+        else if new_pos > 0
+        then new_pos / dial_max
+        else (-new_pos / dial_max) + if new_pos = dx then 0 else 1
+      in
+      let pos = (((pos + dx) mod dial_max) + dial_max) % dial_max in
+      let count = count + inc in
+      pos, count)
+  in
+  count
+;;
 
 (*(*(*(*(*(*(*(*(*( SOLVE )*)*)*)*)*)*)*)*)*)
 let () =
@@ -49,5 +67,5 @@ let () =
       print_endline "Please specify the part to solve.";
       exit 1
   in
-  print_endline @@ string_of_int @@ (* Tuple2.uncurry *) solve (parse_input ())
+  printf "%d\n" @@ solve (parse_input ())
 ;;
