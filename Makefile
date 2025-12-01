@@ -63,3 +63,13 @@ $(JAVA_BINS): $(JAVA_OUT_DIR)/%.class: $(JAVA_SRC_DIR)/%.java
 %:: $(JAVA_OUT_DIR)/%.class
 	$(JRE) $(JRE_FLAGS) -cp $(JAVA_OUT_DIR) $@
 
+
+# Tcl goals
+TCL_PKG_DIR = ./src/lib/tcl
+TCL_PKG_INDEX = $(TCL_PKG_DIR)/pkgIndex.tcl
+TCL_PKGS = $(filter-out $(TCL_PKG_INDEX),$(wildcard $(TCL_PKG_DIR)/*.tcl))
+
+tclindex: $(TCL_PKG_INDEX)
+$(TCL_PKG_INDEX): $(TCL_PKGS)
+	tclsh <<< 'pkg_mkIndex -verbose -- $(TCL_PKG_DIR) *.tcl'
+

@@ -1,7 +1,7 @@
 (*
    Day ${day} - ${title}
    ${url}
-   Start: ${fetch_time}
+   Start:  ${fetch_time}
    Finish: TODO
 *)
 open! Core

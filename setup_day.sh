@@ -59,8 +59,14 @@ case "$lang" in
         template_file="$TEMPLATE_DIR/template.ml"
         language_pretty="OCaml"
         ;;
+    tcl)
+        lang=tcl
+        src_file="$SRC_DIR/tcl/day$day_padded.tcl"
+        template_file="$TEMPLATE_DIR/template.tcl"
+        language_pretty="Tcl"
+        ;;
     *)
-        echo "Available languages: java|j, rust|rs|r, c++|cpp|c, ocaml|ml"
+        echo "Available languages: java|j, rust|rs|r, c++|cpp|c, ocaml|ml, tcl"
         exit 1
         ;;
 esac
@@ -125,11 +131,16 @@ esac
 # Open puzzle in browser and editor
 # TODO pass script argument to do this instead
 
-xdg_open_background() {
-    url="$1"
-    nohup xdg-open "$url" &> /dev/null &
+orphaned() {
+    nohup "$@" &> /dev/null &
     disown
 }
 
-nohup xdg-open "$url" &> /dev/null & disown
-nohup alacritty -e nvim "$src_file" "./inputs/example.txt" "./inputs/input${day_padded}.txt" &> /dev/null & disown
+read -rp "Open $url in browser? [y/N] " ANS
+[[ "$ANS" =~ ^[Yy]([Ee][Ss]?)?$ ]] &&
+    orphaned xdg-open "$url"
+
+read -rp "Open $src_file in editor? [y/N] " ANS
+[[ "$ANS" =~ ^[Yy]([Ee][Ss]?)?$ ]] &&
+    orphaned alacritty -e "${VISUAL:-${EDITOR:-nvim}}" "$src_file" "./inputs/example.txt" "./inputs/input${day_padded}.txt"
+

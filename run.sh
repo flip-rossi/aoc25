@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 SRC_DIR=./src/main
+LIB_DIR=./src/lib
 INPUT_DIR=./inputs
 
 RUST_TARGET=./target/rs/debug
@@ -98,6 +99,9 @@ case "$lang" in
     ocaml|ml)
         dune build &&
             run_solution "$OCAML_TARGET/day$day.exe"
+        ;;
+    tcl)
+        TCLLIBPATH="{$(realpath $LIB_DIR)/tcl} $TCLLIBPATH"
         ;;
     *)
         print_msg "Language '$lang' not supported."

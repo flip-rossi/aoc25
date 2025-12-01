@@ -2,7 +2,7 @@
 
 These are my solutions for the [2025 edition](https://adventofcode.com/2025) of the annual event **Advent of Code**.
 
-- The code for each solution is in [src/main/](src/main/), in either Java, Rust, C++, or OCaml.
+- The code for each solution is in [src/main/](src/main/), in either Java, Rust, C++, OCaml, or Tcl.
 
 
 ## Helper scripts
