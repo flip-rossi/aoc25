@@ -24,6 +24,7 @@ if [[ -v 1 ]]; then
 else
     day_padded=$(TZ='EST5' date +%d)
 fi
+mkdir -p inputs/
 input_file="inputs/input${day_padded}.txt"
 day=$((10#$day_padded))
 url="https://adventofcode.com/2025/day/${day}"
