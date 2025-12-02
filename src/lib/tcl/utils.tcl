@@ -9,6 +9,10 @@ namespace eval ::utils {
         return $val
     }
 
+    proc importFrom {namespace args} {
+        uplevel namespace import {*}[lmap p $args {id "${namespace}::$p"}]
+    }
+
 
     # list utils ####################################
 
@@ -27,14 +31,20 @@ namespace eval ::utils {
 
     # control flow utils ############################
 
-    proc forpair {varName1 varName2 list body} {
+    proc TODO {} {
+        return -code error -level 2 \
+            "TODO: Not yet implemented."
+    }
+    namespace export TODO
+
+    proc forpairs {varName1 varName2 list body} {
         upvar $varName1 x
         upvar $varName2 y
 
         set n [llength $list]
         for {set i 0} {$i < $n} {incr i 2} {
             set x [idx $list $i]
-            set y [idx $list [seq $i]]
+            set y [idx $list [expr {$i + 1}]]
             uplevel $body
         }
     }

@@ -8,16 +8,14 @@
 #
 ################################################################################
 
-package require utils
-namespace import {*}[lmap p {forpair forrange lreduce} {utils::id "::utils::$p"}]
+package require utils; ::utils::importFrom ::utils \
+    TODO id forpairs forrange lreduce
 
-namespace import ::utils::forpair
+package require arith; ::utils::importFrom ::arith \
+    + - {\\*} / % seq +1 prev -1
 
-package require arith
-namespace import {*}[lmap op {+ - * / %} {utils::id "::arith::$op"}]
-
-package require aliases
-namespace import ::aliases::*
+package require aliases; ::utils::importFrom ::aliases \
+    idx llen slen
 
 
 # READ INPUT ###################################################################
@@ -29,25 +27,32 @@ proc readInput {} {
 
 # PART 1 #######################################################################
 
-# TODO: 2s slowww
+# ~~2s slowww~~
+# 0.025s, much better :)
 proc part1 {} {
     set ranges [readInput]
 
-    set invalids [list]
+    set sum 0
 
-    forpair x y $ranges {
-        forrange id $x [+1 $y] {
-            set mid [/ [slen $id] 2]
-            set l [string range $id 0 [prev $mid]]
-            set r [string range $id $mid end]
-
-            if {$l eq $r} {
-                lappend invalids $id
+    forpairs lo hi $ranges {
+        set id $lo
+        set len [slen $id]
+        if {$len % 2 != 0} {
+            set half "1[string repeat 0 [expr {$len / 2}]]"
+        } else {
+            set half [string range $id 0 [expr {$len / 2 - 1}]]
+            if {"$half$half" < $id} {
+                incr half
             }
+        }
+
+        for {set id "$half$half"} {$id <= $hi} {set id "$half$half"} {
+            incr sum $id
+            incr half
         }
     }
 
-    return [lreduce $invalids sum v 0 {$sum + $v}]
+    return $sum
 }
 
 
@@ -59,8 +64,8 @@ proc part2 {} {
 
     set sum 0
 
-    forpair x y $ranges {
-        forrange id $x [+1 $y] {
+    forpairs lo hi $ranges {
+        forrange id $lo [+1 $hi] {
             set len [slen $id]
             forrange i 0 [/ $len 2] {
                 set sublen [seq $i]
@@ -81,8 +86,15 @@ proc part2 {} {
 }
 
 
+if {[llen $::argv] != 1} {
+    puts stderr "Expected exactly 1 argument but got [llen $::argv]."
+    exit 1
+}
 puts [switch -- [lindex $::argv 0] {
     1 {part1}
     2 {part2}
-    default {error "Expected first argument to be 1 or 2 but got [idx $::argv" 0]"}
+    default {
+        puts stderr "Expected first argument to be 1 or 2 but got \"[idx $::argv 0]\"."
+        exit 1
+    }
 }]
