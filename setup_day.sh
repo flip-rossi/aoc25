@@ -126,6 +126,9 @@ path = \"$src_file\"" \
         sed -E -i 's/\((names|public_names)(.*)\)/\(\1\2 '"day$day_padded"'\)/' "$SRC_DIR/ml/dune"
         dune build
         ;;
+    tcl)
+        chmod +x "$src_file"
+        ;;
 esac
 
 # Open puzzle in browser and editor

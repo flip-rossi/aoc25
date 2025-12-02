@@ -9,6 +9,7 @@ OCAML_TARGET=./_build/default/src/main/ml
 JAVA_CLASSPATH=./target/java/classes
 JAVA_CLASSPATH_FILE=./target/java/mvn-classpath.txt
 CPP_TARGET=./target/cpp
+TCL_TARGET=./src/main/tcl
 
 bad_args() {
     echo -e "USAGE: $0 [language] [day] <part> [OPTIONS...]" >&2
@@ -101,7 +102,8 @@ case "$lang" in
             run_solution "$OCAML_TARGET/day$day.exe"
         ;;
     tcl)
-        TCLLIBPATH="{$(realpath $LIB_DIR)/tcl} $TCLLIBPATH"
+        TCLLIBPATH="{$(realpath $LIB_DIR)/tcl} $TCLLIBPATH" \
+            run_solution "$TCL_TARGET/day$day.tcl"
         ;;
     *)
         print_msg "Language '$lang' not supported."

@@ -32,6 +32,7 @@ You can get your session token by looking at your cookies when logged on in the 
 | Day                                                                    |  Languages                          |
 |------------------------------------------------------------------------|-------------------------------------|
 | [Day 1: Secret Entrance](https://adventofcode.com/2025/day/1)          | **[OCaml](./src/main/ml/day01.ml)** |
+| [Day 2: Gift Shop](https://adventofcode.com/2025/day/2)                | [Tcl](./src/main/tcl/day02.tcl)  |
 
 
 # Previous years
