@@ -74,13 +74,13 @@ esac
 # Download personal input
 . .env # .env should contain the line `SESSION_TOKEN=yoursessiontoken`
 
-if [ ! -e $input_file ]; then
+if [[ -e "$input_file" ]]; then
+    echo "${input_file} already exists:"
+else
     curl -b session=${SESSION_TOKEN} "${url}/input" > $input_file &&
         echo -e "\nFetched input for day ${day} to ${input_file}.\nPreview:"
-else
-    echo "${input_file} already exists."
 fi
-head $input_file
+head "$input_file"
 echo
 
 # Get day's title
@@ -88,9 +88,6 @@ title=$(curl -s ${url} | grep -m 1 "<h2>--- Day" | sed -E "s/^.*<h2>--- Day [0-9
 echo "Day $day: $title"
 
 echo -e "\nSee the puzzle description at $url"
-
-# Create source code file from template
-echo "Creating new file $src_file from template..."
 
 fetch_time="$(date '+%Y-%m-%d %R')"
 escaped_url="${url//\//\\/}"
@@ -100,40 +97,39 @@ template_substs='s/\$\{day\}/'$day'/g;
                  s/\$\{url\}/'$escaped_url'/g;
                  s/\$\{fetch_time\}/'$fetch_time'/g'
 
-if [ -e $src_file ]; then
+if [[ -e "$src_file" ]]; then
     echo "$src_file already exists."
-    exit
+else
+    # Create source code file from template
+    echo "Creating new file $src_file from template..."
+
+    sed -E "$template_substs" "$template_file" > "$src_file"
+
+    # # Add day to Answers.md
+    # echo "| [Day $day: $title]($url) |                   |                 | [$language_pretty]($src_file) |" >> Answers.md
+
+    # Do extra stuff, depending on language
+    case "$lang" in
+        #java) nothing ;;
+        rs)
+            echo \
+    "[[bin]]
+    name = \"day$day_padded\"
+    path = \"$src_file\"" \
+                >> Cargo.toml
+            ;;
+        #cpp) nothing ;;
+        ml)
+            sed -E -i 's/\((names|public_names)(.*)\)/\(\1\2 '"day$day_padded"'\)/' "$SRC_DIR/ml/dune"
+            dune build
+            ;;
+        tcl)
+            chmod +x "$src_file"
+            ;;
+    esac
 fi
 
-cp "$template_file" $src_file
-sed -E "$template_substs" "$template_file" > "$src_file"
-
-# # Add day to Answers.md
-# echo "| [Day $day: $title]($url) |                   |                 | [$language_pretty]($src_file) |" >> Answers.md
-
-# Do extra stuff, depending on language
-case "$lang" in
-    #java) nothing ;;
-    rs)
-        echo \
-"[[bin]]
-name = \"day$day_padded\"
-path = \"$src_file\"" \
-            >> Cargo.toml
-        ;;
-    #cpp) nothing ;;
-    ml)
-        sed -E -i 's/\((names|public_names)(.*)\)/\(\1\2 '"day$day_padded"'\)/' "$SRC_DIR/ml/dune"
-        dune build
-        ;;
-    tcl)
-        chmod +x "$src_file"
-        ;;
-esac
-
 # Open puzzle in browser and editor
-# TODO pass script argument to do this instead
-
 orphaned() {
     nohup "$@" &> /dev/null &
     disown

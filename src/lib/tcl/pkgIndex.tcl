@@ -8,5 +8,6 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
+package ifneeded aliases 0.1 [list source [file join $dir aliases.tcl]]
 package ifneeded arith 0.1 [list source [file join $dir arith.tcl]]
 package ifneeded utils 0.1 [list source [file join $dir utils.tcl]]

@@ -8,9 +8,17 @@ namespace eval ::arith {
         namespace export $binop
     }
 
+    proc seq {x} { + $x 1 }
+    proc prev {x} { - $x 1 }
 }
 
+interp alias {} ::arith::+1 {} seq
+interp alias {} ::arith::-1 {} prev
+
 namespace eval ::arith {
-    namespace export [lsearch -all -inline -regexp [info procs] {^[a-z]}]
+    # Export all aliases
+    namespace export {*}[string map {::arith:: {}} [lsearch -all -inline [interp aliases] ::arith::*]]
+    # Export public procs (camelCase name)
+    namespace export {*}[lsearch -all -inline -regexp [info procs] {^[a-z]}]
 }
-package provide arith 0.1
+package provide arith $::arith::version

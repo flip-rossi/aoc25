@@ -4,56 +4,20 @@
 # Day 2 - Gift Shop
 # https://adventofcode.com/2025/day/2
 # Start:  2025-12-02 14:28
-# Finish: TODO
+# Finish: 2025-12-02 16:39
 #
 ################################################################################
 
 package require utils
+namespace import {*}[lmap p {forpair forrange lreduce} {utils::id "::utils::$p"}]
+
+namespace import ::utils::forpair
+
 package require arith
 namespace import {*}[lmap op {+ - * / %} {utils::id "::arith::$op"}]
 
-proc idx {list index} {
-    lindex $list $index
-}
-
-proc seq {x} {
-    + $x 1
-}
-proc prev {x} {
-    - $x 1
-}
-
-proc forpair {varName1 varName2 list body} {
-    upvar $varName1 x
-    upvar $varName2 y
-
-    set n [llength $list]
-    for {set i 0} {$i < $n} {incr i 2} {
-        set x [idx $list $i]
-        set y [idx $list [seq $i]]
-        uplevel $body
-    }
-}
-
-proc forrange {varName start end body} {
-    upvar $varName i
-    for {set i $start} {$i < $end} {incr i} {
-        uplevel $body
-    }
-}
-
-
-proc lreduce {list accName valName init expr} {
-    upvar $accName acc
-    upvar $valName v
-
-    set acc $init
-    foreach v $list {
-        set acc [uplevel [list expr $expr]]
-    }
-
-    return $acc
-}
+package require aliases
+namespace import ::aliases::*
 
 
 # READ INPUT ###################################################################
@@ -65,15 +29,15 @@ proc readInput {} {
 
 # PART 1 #######################################################################
 
+# TODO: 2s slowww
 proc part1 {} {
-    # TODO: 2s slowww
     set ranges [readInput]
 
     set invalids [list]
 
     forpair x y $ranges {
-        forrange id $x $y {
-            set mid [/ [string length $id] 2]
+        forrange id $x [+1 $y] {
+            set mid [/ [slen $id] 2]
             set l [string range $id 0 [prev $mid]]
             set r [string range $id $mid end]
 
@@ -89,8 +53,31 @@ proc part1 {} {
 
 # PART 2 #######################################################################
 
+# TODO: 13s even slowwwer
 proc part2 {} {
-    error "TODO: part 1 not done"
+    set ranges [readInput]
+
+    set sum 0
+
+    forpair x y $ranges {
+        forrange id $x [+1 $y] {
+            set len [slen $id]
+            forrange i 0 [/ $len 2] {
+                set sublen [seq $i]
+                if {$len % $sublen != 0} {
+                    continue
+                }
+
+                set sub [string range $id 0 $i]
+                if [regexp -- "^($sub){[/ $len $sublen]}\$" $id] {
+                    set sum [+ $sum $id]
+                    break
+                }
+            }
+        }
+    }
+
+    return $sum
 }
 
 
