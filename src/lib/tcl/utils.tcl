@@ -3,15 +3,102 @@ namespace eval ::utils {
     variable home [file join [pwd] [file dirname [info script]]]
 
 
+    # special proc definitions ######################
+
+    # Description: Define a procedure and export it.
+    # Arguments: same as `proc`
+    proc exproc {name args body} {
+        uplevel 1 \
+            [list proc $name $args $body] \;\
+            [list namespace export $name]
+    }
+    namespace export exproc
+
+    # Description: Define an alias within the current namespace and export it.
+    # Arguments:
+    #   same as `interp alias srcPath srcCmd targetPath targetCmd ?arg arg ...?`
+    exproc expalias {srcPath srcCmd targetPath targetCmd args} {
+        set ns [uplevel 1 namespace current]
+        uplevel 1 \
+            [list interp alias $srcPath "${ns}::$srcCmd" $targetPath $targetCmd {*}$args] \;\
+            [list namespace export $srcCmd]
+    }
+
+    # Description: Define a procedure where each result is memoized into a
+    #              hidden static dictionary.
+    # Arguments: same as `proc`
+    exproc memoproc {name args body} {
+        set memosName [static memos]
+
+        set arrKey "[string trimright [uplevel 1 namespace current] :]::$name"
+        array set memos [list $arrKey [dict create]]
+        set memoName ${memosName}($arrKey)
+
+        set sArgs ""
+        foreach arg $args {
+            if {[llength $arg] == 1} {
+                append sArgs " \${$arg}"
+            } else {
+                append sArgs " \${[lindex $arg 0]}"
+            }
+        }
+
+        uplevel 1 [list proc $name $args [subst -nocommands {
+            if {[dict exists [set {$memoName}] [list $sArgs]]} {
+                set result [dict get [set {$memoName}] [list $sArgs]]
+                return [set result]
+            } else {
+                set result [apply {{$args} {$body}} $sArgs]
+                dict set {$memoName} [list $sArgs] [set result]
+                return [set result]
+            }
+        }]]
+    }
+
+
     # general utils #################################
 
-    proc id {val} {
-        return $val
+    exproc importFrom {namespace args} {
+        uplevel 1 namespace import [lmap p $args {id "${namespace}::$p"}]
     }
 
-    proc importFrom {namespace args} {
-        uplevel namespace import {*}[lmap p $args {id "${namespace}::$p"}]
+    # Description: Require a package and import its procedures.
+    # Arguments:
+    # * `package` - Same as in `package require`
+    # * `?requirement...?` - Same as in `package require`
+    # * `?-namespace namespace?` - The namespace to import the procedures from.
+    #                              Defaults to `::$package`.
+    # * `?-force?` - Same as in `namespace import`
+    # * `imports` - List of patterns to import, like in `namespace import`, except
+    #               each will be prefixed with the package's namespace.
+    exproc importPackage {package args} {
+        set reqCmd [list package require $package]
+        set importCmd [list namespace import]
+
+        set namespace "::$package"
+
+        while {[lremaining $args i] > 1} {
+            set opt [lnext $args i]
+            switch -- $opt {
+                -namespace {
+                    set namespace [lnext $args i]
+                }
+                -force {
+                    lappend importCmd -force
+                }
+                default {
+                    # add a requirement to the `package require` command
+                    lappend reqCmd $opt
+                }
+            }
+        }
+
+        lappend importCmd {*}[lmap p [lnext $args i] {id "${namespace}::$p"}]
+
+        uplevel 1 $reqCmd
+        uplevel 1 $importCmd
     }
+
 
     # Description: Create a proc-local static variable and bring it to scope.
     #              I mostly got there by myself but better inspiration was
@@ -20,7 +107,7 @@ namespace eval ::utils {
     # * `name`
     # * ?`value`?
     # Returns: The fully qualified name of the variable with namespaces.
-    proc static {args} {
+    exproc static {args} {
         set varName [lindex $args 0]
 
         set ns "[namespace current]::Static"
@@ -37,83 +124,72 @@ namespace eval ::utils {
         return $qualifiedName
     }
 
-    # list utils ####################################
+    exproc TODO {} {
+        return -code error -level 2 \
+            "TODO: Not yet implemented."
+    }
 
-    proc lreduce {list accName valName init expr} {
-        upvar $accName acc
-        upvar $valName v
 
-        set acc $init
-        foreach v $list {
-            set acc [uplevel [list expr $expr]]
-        }
+    # functional utils ##############################
 
-        return $acc
+    exproc id {val} {
+        return $val
     }
 
 
     # control flow utils ############################
 
-    proc TODO {} {
-        return -code error -level 2 \
-            "TODO: Not yet implemented."
-    }
-    namespace export TODO
-
-    proc forrange {varName start end body} {
-        upvar $varName i
+    exproc forrange {varName start end body} {
+        upvar 1 $varName i
         for {set i $start} {$i < $end} {incr i} {
-            uplevel $body
+            uplevel 1 $body
         }
     }
 
-    proc dowhile {body test} {
+    exproc dowhile {body test} {
         while {true} {
-            uplevel $body
-            if {[uplevel expr !($test)]} {
+            uplevel 1 $body
+            if {[uplevel 1 expr !($test)]} {
                 break
             }
         }
     }
 
-    # Description: Create a new procedure where each result is memoized into a
-    #              hidden static dictionary.
-    # Arguments: same as `proc`
-    proc memoproc {name args body} {
-        set memosName [static memos]
 
-        set arrKey "[string trimright [uplevel 1 namespace current] :]::$name"
-        array set memos [list $arrKey [dict create]]
-        set memoName ${memosName}($arrKey)
+    # list utils ####################################
 
-        set sArgs ""
-        foreach arg $args {
-            if {[llength $arg] == 1} {
-                append sArgs " \${$arg}"
-            } else {
-                append sArgs " \${[lindex $arg 0]}"
-            }
+    exproc lreduce {list accName valName init expr} {
+        upvar 1 $accName acc
+        upvar 1 $valName v
+
+        set acc $init
+        foreach v $list {
+            set acc [uplevel 1 [list expr $expr]]
         }
 
-        uplevel [list proc $name $args [subst -nocommands {
-            if {[dict exists [set {$memoName}] [list $sArgs]]} {
-                set result [dict get [set {$memoName}] [list $sArgs]]
-                return [set result]
-            } else {
-                set result [apply {{$args} {$body}} $sArgs]
-                dict set {$memoName} [list $sArgs] [set result]
-                return [set result]
-            }
-        }]]
+        return $acc
+    }
+
+    # Intended to be used with `lremaining`, to implement a list iterator
+    exproc lnext {list indexVarName} {
+        upvar 1 $indexVarName i
+        if {![info exists i]} {
+            set i -1
+        }
+
+        return [lindex $list [incr i]]
+    }
+
+    # Intended to be used with `lnext`, to implement a list iterator
+    exproc lremaining {list indexVarName} {
+        upvar 1 $indexVarName i
+        if {[info exists i]} {
+            return [expr {max(0, [llength $list] - $i - 1)}]
+        } else {
+            return [llength $list]
+        }
     }
 
 }
 
-namespace eval ::utils {
-    # Export all aliases
-    namespace export {*}[string map {"::[namespace current]::" {}} \
-        [lsearch -all -inline [interp aliases] "::[namespace current]::*"]]
-    # Export public procs (camelCase name)
-    namespace export {*}[lsearch -all -inline -regexp [info procs] {^[a-z]}]
-}
 package provide utils $::utils::version

@@ -8,14 +8,11 @@
 #
 ################################################################################
 
-package require utils; ::utils::importFrom ::utils \
-    TODO id forrange lreduce
+package require utils 0.1
 
-package require arith; ::utils::importFrom ::arith \
-    + - {\\*} / % seq +1 prev -1
-
-package require aliases; ::utils::importFrom ::aliases \
-    idx llen slen
+::utils::importPackage utils 0.1 { TODO id forrange lreduce }
+::utils::importPackage arith 0.1 { + - \\* / % seq +1 prev -1 }
+::utils::importPackage aliases 0.1 { idx llen slen }
 
 
 # READ INPUT ###################################################################
@@ -38,9 +35,9 @@ proc part1 {} {
         set id $lo
         set len [slen $id]
         if {$len % 2 != 0} {
-            set half "1[string repeat 0 [expr {$len / 2}]]"
+            set half "1[string repeat 0 [/ $len 2]]"
         } else {
-            set half [string range $id 0 [expr {$len / 2 - 1}]]
+            set half [string range $id 0 [-1 [/ $len 2]]]
             if {"$half$half" < $id} {
                 incr half
             }

@@ -1,19 +1,17 @@
+package require utils 0.1
+
 namespace eval ::aliases {
     variable version 0.1
     variable home [file join [pwd] [file dirname [info script]]]
+
+    ::utils::importFrom ::utils expalias
+
+    # list aliases ##################################
+    expalias {} idx {} lindex
+    expalias {} llen {} llength
+
+    # string aliases ################################
+    expalias {} slen {} string length
 }
 
-# list aliases ##################################
-interp alias {} ::aliases::idx {} lindex
-interp alias {} ::aliases::llen {} llength
-
-# string aliases ################################
-interp alias {} ::aliases::slen {} string length
-
-namespace eval ::aliases {
-    # Export all aliases
-    namespace export {*}[string map {::aliases:: {}} [lsearch -all -inline [interp aliases] ::aliases::*]]
-    # Export public procs (camelCase name)
-    namespace export {*}[lsearch -all -inline -regexp [info procs] {^[a-z]}]
-}
 package provide aliases $::aliases::version

@@ -1,24 +1,20 @@
+package require utils 0.1
+
 namespace eval ::arith {
     variable version 0.1
     variable home [file join [pwd] [file dirname [info script]]]
 
-    foreach binop {+ - * / %} {
-        proc $binop {lhs rhs} [list expr "\$lhs $binop \$rhs"]
+    ::utils::importFrom ::utils exproc expalias
 
-        namespace export $binop
+    foreach binop {+ - * / %} {
+        exproc $binop {lhs rhs} [list expr "\$lhs $binop \$rhs"]
     }
 
-    proc seq {x} { + $x 1 }
-    proc prev {x} { - $x 1 }
+    exproc seq {x} { + $x 1 }
+    exproc prev {x} { - $x 1 }
+
+    expalias {} +1 {} seq
+    expalias {} -1 {} prev
 }
 
-interp alias {} ::arith::+1 {} seq
-interp alias {} ::arith::-1 {} prev
-
-namespace eval ::arith {
-    # Export all aliases
-    namespace export {*}[string map {::arith:: {}} [lsearch -all -inline [interp aliases] ::arith::*]]
-    # Export public procs (camelCase name)
-    namespace export {*}[lsearch -all -inline -regexp [info procs] {^[a-z]}]
-}
 package provide arith $::arith::version

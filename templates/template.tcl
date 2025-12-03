@@ -8,14 +8,17 @@
 #
 ################################################################################
 
-package require utils; ::utils::importFrom ::utils \
-    TODO id lreduce forrange dowhile
+package require utils 0.1
 
-package require arith; ::utils::importFrom ::arith \
-    + - {\\*} / % seq +1 prev -1
+::utils::importPackage utils 0.1 {
+    memoproc
+    static TODO
+    id
+    forrange dowhile
+    lreduce lnext lremaining }
+::utils::importPackage arith 0.1 { + - \\* / % seq +1 prev -1 }
+::utils::importPackage aliases 0.1 { idx llen slen }
 
-package require aliases; ::utils::importFrom ::aliases \
-    idx llen slen
 
 # READ INPUT ###################################################################
 
