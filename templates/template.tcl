@@ -9,7 +9,7 @@
 ################################################################################
 
 package require utils; ::utils::importFrom ::utils \
-    TODO id forpairs forrange lreduce
+    TODO id lreduce forrange dowhile
 
 package require arith; ::utils::importFrom ::arith \
     + - {\\*} / % seq +1 prev -1

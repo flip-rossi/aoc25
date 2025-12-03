@@ -9,7 +9,7 @@
 ################################################################################
 
 package require utils; ::utils::importFrom ::utils \
-    TODO id forpairs forrange lreduce
+    TODO id forrange lreduce
 
 package require arith; ::utils::importFrom ::arith \
     + - {\\*} / % seq +1 prev -1
@@ -34,7 +34,7 @@ proc part1 {} {
 
     set sum 0
 
-    forpairs lo hi $ranges {
+    dict for {lo hi} $ranges {
         set id $lo
         set len [slen $id]
         if {$len % 2 != 0} {
@@ -64,7 +64,7 @@ proc part2 {} {
 
     set sum 0
 
-    forpairs lo hi $ranges {
+    dict for {lo hi} $ranges {
         forrange id $lo [+1 $hi] {
             set len [slen $id]
             forrange i 0 [/ $len 2] {
