@@ -139,9 +139,40 @@ namespace eval ::utils {
 
     # control flow utils ############################
 
-    exproc forrange {varName start end body} {
+    exproc forrange {varName args} {
+        if {[lremaining $args a] >= 2} {
+            if {[lremaining $args a] >= 3} {
+                set start [lnext $args a]
+            }
+            set end [lnext $args a]
+        }
+        set body [lnext $args a]
+
         upvar 1 $varName i
+
         for {set i $start} {$i < $end} {incr i} {
+            uplevel 1 $body
+        }
+    }
+
+    exproc foripairs {indexName valueName list args} {
+        set start 0
+        set end [llength $list]
+
+        if {[lremaining $args a] >= 2} {
+            if {[lremaining $args a] >= 3} {
+                set start [lnext $args a]
+            }
+            set end [lnext $args a]
+            # TODO: `end`, `end-1`, ... syntax from `lrange`
+        }
+        set body [lnext $args a]
+
+        upvar 1 $indexName i
+        upvar 1 $valueName v
+
+        forrange i $start $end {
+            set v [lindex $list i]
             uplevel 1 $body
         }
     }

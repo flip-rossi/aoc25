@@ -11,12 +11,12 @@
 package require utils 0.1
 
 ::utils::importPackage utils 0.1 {
-    memoproc
-    static TODO
+    memoproc static TODO
     id
-    forrange dowhile
-    lreduce lnext lremaining }
-::utils::importPackage arith 0.1 { + - \\* / % seq +1 prev -1 }
+    forrange foripairs dowhile
+    lreduce lnext lremaining
+}
+::utils::importPackage arith 0.1 { ops::* seq +1 prev -1 }
 ::utils::importPackage aliases 0.1 { idx llen slen }
 
 
