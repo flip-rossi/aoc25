@@ -4,7 +4,7 @@
 # Day 3 - Lobby
 # https://adventofcode.com/2025/day/3
 # Start:  2025-12-07 11:11
-# Finish: TODO
+# Finish: 2025-12-07 12:01
 #
 ################################################################################
 
@@ -19,15 +19,6 @@ package require utils 0.1
 }
 ::utils::importPackage arith 0.1 { ops::* seq +1 prev -1 }
 ::utils::importPackage aliases 0.1 { idx llen slen }
-
-
-# READ INPUT ###################################################################
-
-proc readInput {} {
-    while {[set line [gets stdin]] ne ""} {
-        puts line:$line
-    }
-}
 
 
 # PART 1 #######################################################################
@@ -60,7 +51,29 @@ proc part1 {} {
 # PART 2 #######################################################################
 
 proc part2 {} {
-    TODO
+    set JLEN 12
+
+    set total 0
+    while {[set bank [gets stdin]] ne ""} {
+        set joltage [lrepeat $JLEN 0]
+
+        set n [string length $bank]
+        for {set i 0} {$i < $n} {incr i} {
+            set bat [string index $bank $i]
+            for {set j [expr {max($JLEN - ($n - $i), 0)}]} {$j < $JLEN} {incr j} {
+                if {$bat > [idx $joltage $j]} {
+                    lset joltage $j $bat
+                    break
+                }
+            }
+            for {incr j} {$j < $JLEN} {incr j} {
+                lset joltage $j 0
+            }
+        }
+
+        incr total [join $joltage ""]
+    }
+    return $total
 }
 
 
