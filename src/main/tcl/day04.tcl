@@ -4,7 +4,7 @@
 # Day 4 - Printing Department
 # https://adventofcode.com/2025/day/4
 # Start:  2025-12-07 12:17 (but actually 15:36)
-# Finish: TODO
+# Finish: 2025-12-07 16:27
 #
 ################################################################################
 
@@ -35,6 +35,7 @@ proc readInput {} {
 
 # PART 1 #######################################################################
 
+# 140ms
 proc part1 {} {
     set LIMIT 4
 
@@ -73,8 +74,44 @@ proc part1 {} {
 
 # PART 2 #######################################################################
 
+# 2,200ms 🤪
 proc part2 {} {
-    TODO
+    set LIMIT 4
+
+    set count 0
+
+    set map [readInput]
+    set n [llen $map]
+    set m [llen [lindex $map 0]]
+
+    dowhile {
+        set lastRemoved 0
+        for {set i 0} {$i < $n} {incr i} {
+            for {set j 0} {$j < $m} {incr j} {
+                if {[lindex $map $i $j]} {
+                    try {
+                        set neighbors 0
+                        for {set ii [expr {max(0, $i - 1)}]} {$ii < min($i + 2, $n)} {incr ii} {
+                            for {set jj [expr {max(0, $j - 1)}]} {$jj < min($j + 2, $n)} {incr jj} {
+                                if {[incr neighbors [lindex $map $ii $jj]] > $LIMIT} {
+                                    return  -level 0 -code 10
+                                }
+                            }
+                        }
+                        #lset dbg $i $j {X}
+                        lset map $i $j 0
+                        incr count
+                        set lastRemoved 1
+                    } on 10 {} {
+                    }
+                }
+            }
+        }
+    } {$lastRemoved != 0}
+
+    #puts [join $dbg \n]
+
+    return $count
 }
 
 
