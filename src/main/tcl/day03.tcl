@@ -1,9 +1,9 @@
 #!/usr/bin/env tclsh
 ################################################################################
 #
-# Day ${day} - ${title}
-# ${url}
-# Start:  ${fetch_time}
+# Day 3 - Lobby
+# https://adventofcode.com/2025/day/3
+# Start:  2025-12-07 11:11
 # Finish: TODO
 #
 ################################################################################
@@ -24,14 +24,36 @@ package require utils 0.1
 # READ INPUT ###################################################################
 
 proc readInput {} {
-    TODO
+    while {[set line [gets stdin]] ne ""} {
+        puts line:$line
+    }
 }
 
 
 # PART 1 #######################################################################
 
 proc part1 {} {
-    TODO
+    set total 0
+    while {[set bank [gets stdin]] ne ""} {
+        set joltl 0
+        set joltr 0
+        set n [string length $bank]
+        for {set i 0} {$i < [-1 $n]} {incr i} {
+            set bat [string index $bank $i]
+            if {$bat > $joltl} {
+                set joltl $bat
+                set joltr 0
+            } elseif {$bat > $joltr} {
+                set joltr $bat
+            }
+        }
+        set bat [string index $bank $i]
+        if {$bat > $joltr} {
+            set joltr $bat
+        }
+        incr total $joltl$joltr
+    }
+    return $total
 }
 
 

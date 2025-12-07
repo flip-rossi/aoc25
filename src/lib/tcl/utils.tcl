@@ -221,6 +221,20 @@ namespace eval ::utils {
         }
     }
 
+
+    # string utils ###################################
+
+    # foreach char in string
+    exproc forchar {varname string body} {
+        upvar 1 $varname char
+
+        set n [string length $string]
+        for {set i 0} {$i < $n} {incr i} {
+            set char [string index $i]
+            uplevel 1 $body
+        }
+    }
+
 }
 
 package provide utils $::utils::version
