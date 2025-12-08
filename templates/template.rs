@@ -15,7 +15,7 @@ fn main() {
     let answer = match args().nth(1).and_then(|s| i32::from_str_radix(&s, 10).ok()) {
         Some(1) => part1(),
         Some(2) => part2(),
-        _ => utils::print_usage_and_exit!()
+        _ => lib::print_usage_and_exit!()
     };
     println!("{answer}")
 }

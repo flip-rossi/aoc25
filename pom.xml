@@ -42,6 +42,7 @@
   </dependencies>
 
   <build>
+    <sourceDirectory>${project.basedir}/src</sourceDirectory>
     <directory>${project.basedir}/target/java</directory>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
         <plugins>
@@ -87,7 +88,7 @@
       </plugins>
     </pluginManagement>
     <plugins>
-        <plugin>
+        <!-- <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
             <version>3.2.0</version>
@@ -104,7 +105,7 @@
                     </configuration>
                 </execution>
             </executions>
-        </plugin>
+        </plugin> -->
     </plugins>
   </build>
 </project>

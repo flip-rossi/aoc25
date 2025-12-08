@@ -1,4 +1,4 @@
 (library
- (name utils)
+ (name lib)
  (libraries core)
  (preprocess (pps ppx_sexp_conv)))

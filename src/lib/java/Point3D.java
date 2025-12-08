@@ -1,4 +1,4 @@
-package aoc;
+package lib.java;
 
 public class Point3D {
     public long x;

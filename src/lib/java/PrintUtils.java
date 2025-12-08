@@ -1,4 +1,4 @@
-package aoc;
+package lib.java;
 
 public class PrintUtils {
     public static void printBoolMatrix(boolean[][] mat, char falseSymbol, char trueSymbol) {

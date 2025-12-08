@@ -11,7 +11,7 @@ else
 	CXX_FLAGS := $(CXX_FLAGS) -O2
 endif
 
-CXX_SRC_DIR := ./src/main/cpp
+CXX_SRC_DIR := ./src
 CXX_OUT_DIR := ./target/cpp
 
 CXX_SRCS := $(wildcard $(CXX_SRC_DIR)/*.cpp)
@@ -23,7 +23,7 @@ JRE := java
 #same flags as MUIP '23
 #JRE_FLAGS := -Xss128m -Xms512m -Xmx512m
 
-JAVA_SRC_DIR := ./src/main/java
+JAVA_SRC_DIR := ./src
 JAVA_OUT_DIR := ./target/java/classes
 
 JAVA_SRCS := $(wildcard $(JAVA_SRC_DIR)/*.java)

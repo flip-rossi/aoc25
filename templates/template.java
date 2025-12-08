@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
  * <h1>Day ${day} - ${title}</h1>
  * ${url}
  * <p>
- *  Start: ${fetch_time} <br>
+ * Start:  ${fetch_time} <br>
  * Finish: TODO
  */
 public class Day${day_padded} {

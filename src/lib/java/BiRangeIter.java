@@ -1,4 +1,4 @@
-package aoc;
+package lib.java;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

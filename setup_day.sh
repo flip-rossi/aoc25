@@ -5,7 +5,7 @@ bad_args() {
     exit 1
 }
 
-SRC_DIR="src/main"
+SRC_DIR="src"
 TEMPLATE_DIR="templates"
 
 if [[ $# == 0 ]]; then
@@ -34,34 +34,31 @@ shift
 case "$lang" in
     java|j)
         lang=java
-        mkdir -p "$SRC_DIR/java"
-        src_file="$SRC_DIR/java/Day$day_padded.java"
+        src_file="$SRC_DIR/Day$day_padded.java"
         template_file="$TEMPLATE_DIR/template.java"
         language_pretty="Java"
         ;;
     rs|r|rust)
         lang=rs
-        mkdir -p "$SRC_DIR/rs"
-        src_file="$SRC_DIR/rs/day$day_padded.rs"
+        src_file="$SRC_DIR/day$day_padded.rs"
         template_file="$TEMPLATE_DIR/template.rs"
         language_pretty="Rust"
         ;;
     cpp|c|c++)
         lang=cpp
-        mkdir -p "$SRC_DIR/cpp"
-        src_file="$SRC_DIR/cpp/day$day_padded.cpp"
+        src_file="$SRC_DIR/day$day_padded.cpp"
         template_file="$TEMPLATE_DIR/template.cpp"
         language_pretty="C++"
         ;;
     ml|ocaml)
         lang=ml
-        src_file="$SRC_DIR/ml/day$day_padded.ml"
+        src_file="$SRC_DIR/day$day_padded.ml"
         template_file="$TEMPLATE_DIR/template.ml"
         language_pretty="OCaml"
         ;;
     tcl)
         lang=tcl
-        src_file="$SRC_DIR/tcl/day$day_padded.tcl"
+        src_file="$SRC_DIR/day$day_padded.tcl"
         template_file="$TEMPLATE_DIR/template.tcl"
         language_pretty="Tcl"
         ;;
@@ -103,6 +100,7 @@ else
     # Create source code file from template
     echo "Creating new file $src_file from template..."
 
+    mkdir -p "$SRC_DIR"
     sed -E "$template_substs" "$template_file" > "$src_file"
 
     # # Add day to Answers.md
@@ -112,15 +110,12 @@ else
     case "$lang" in
         #java) nothing ;;
         rs)
-            echo \
-    "[[bin]]
-    name = \"day$day_padded\"
-    path = \"$src_file\"" \
+            echo -e "\n[[bin]]\nname = \"day$day_padded\"\npath = \"$src_file\"" \
                 >> Cargo.toml
             ;;
         #cpp) nothing ;;
         ml)
-            sed -E -i 's/\((names|public_names)(.*)\)/\(\1\2 '"day$day_padded"'\)/' "$SRC_DIR/ml/dune"
+            sed -E -i 's/\((names|public_names)(.*)\)/\(\1\2 '"day$day_padded"'\)/' "$SRC_DIR/dune"
             dune build
             ;;
         tcl)

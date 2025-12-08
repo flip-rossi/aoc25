@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Triple;
 
-import aoc.Point3D;
-import aoc.UnionFind;
+import lib.java.Point3D;
+import lib.java.UnionFind;
 
 /**
  * <h1>Day 8 - Playground</h1>

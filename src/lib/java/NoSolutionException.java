@@ -1,4 +1,4 @@
-package aoc;
+package lib.java;
 
 public class NoSolutionException extends RuntimeException {
     public NoSolutionException() {

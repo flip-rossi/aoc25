@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-SRC_DIR=./src/main
+SRC_DIR=./src
 LIB_DIR=./src/lib
 INPUT_DIR=./inputs
 
 RUST_TARGET=./target/rs/debug
-OCAML_TARGET=./_build/default/src/main/ml
+OCAML_TARGET=./_build/default/src
 JAVA_CLASSPATH=./target/java/classes
 JAVA_CLASSPATH_FILE=./target/java/mvn-classpath.txt
 CPP_TARGET=./target/cpp
-TCL_TARGET=./src/main/tcl
+TCL_TARGET=./src
 
 bad_args() {
     echo -e "USAGE: $0 [language] [day] <part> [OPTIONS...]" >&2

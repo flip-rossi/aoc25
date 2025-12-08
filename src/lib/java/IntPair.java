@@ -1,4 +1,4 @@
-package aoc;
+package lib.java;
 
 public class IntPair {
     public final int i, j;
