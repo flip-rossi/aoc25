@@ -26,19 +26,19 @@ You can get your session token by looking at your cookies when logged on in the 
 
 ## Solutions
 
-> - lang - part 1 done in language;
-> - **lang** - parts 1 and 2 done in language.
+> - ☆ - part 1 done in language;
+> - ★ - parts 1 and 2 done in language.
 
-| Day                                                                    |  Languages                          |
-|------------------------------------------------------------------------|-------------------------------------|
-| [Day 1: Secret Entrance](https://adventofcode.com/2025/day/1)          | **[OCaml](./src/main/ml/day01.ml)** |
-| [Day 2: Gift Shop](https://adventofcode.com/2025/day/2)                | **[Tcl](./src/main/tcl/day02.tcl)**  |
-| [Day 3: Lobby](https://adventofcode.com/2025/day/3)                | **[Tcl](./src/main/tcl/day03.tcl)**  |
-| [Day 4: Printing Department](https://adventofcode.com/2025/day/4)                | **[Tcl](./src/main/tcl/day04.tcl)**  |
-| [Day 5: --](https://adventofcode.com/2025/day/5)                | |
-| [Day 6: --](https://adventofcode.com/2025/day/6)                | |
-| [Day 7: --](https://adventofcode.com/2025/day/7)                | |
-| [Day 8: Playground](https://adventofcode.com/2025/day/8)                | [Java](./src/main/java/Day08.java) |
+| Day                                                               |  Languages                           |
+|-------------------------------------------------------------------|--------------------------------------|
+| [Day 1: Secret Entrance](https://adventofcode.com/2025/day/1)     | [★ OCaml](./src/main/ml/day01.ml)    |
+| [Day 2: Gift Shop](https://adventofcode.com/2025/day/2)           | [★ Tcl](./src/main/tcl/day02.tcl)    |
+| [Day 3: Lobby](https://adventofcode.com/2025/day/3)               | [★ Tcl](./src/main/tcl/day03.tcl)    |
+| [Day 4: Printing Department](https://adventofcode.com/2025/day/4) | [★ Tcl](./src/main/tcl/day04.tcl)    |
+| [Day 5: --](https://adventofcode.com/2025/day/5)                  |                                      |
+| [Day 6: --](https://adventofcode.com/2025/day/6)                  |                                      |
+| [Day 7: --](https://adventofcode.com/2025/day/7)                  |                                      |
+| [Day 8: Playground](https://adventofcode.com/2025/day/8)          | [★ Java](./src/main/java/Day08.java) |
 
 
 # Previous years
