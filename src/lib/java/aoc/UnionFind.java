@@ -38,7 +38,7 @@ public class UnionFind {
     }
 
     /** Pre-condition: 0 <= element < partition.length */
-    protected boolean isRepresentative(int element) {
+    public boolean isRepresentative(int element) {
         return partition[element] < 0;
     }
 
@@ -90,6 +90,13 @@ public class UnionFind {
             partition[rep1] = rep2;
             return rep2;
         }
+    }
+
+    /**
+     * @return wether the two elements are in the same set.
+     */
+    public boolean sameSet(int element1, int element2) throws NoSuchElementException {
+        return this.find(element1) == this.find(element2);
     }
 
 }

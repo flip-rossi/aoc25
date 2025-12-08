@@ -1,25 +1,25 @@
 package aoc;
 
-public class Point {
-    public int x;
-    public int y;
+public class Point2D {
+    public long x;
+    public long y;
 
-    public Point(int x, int y) {
+    public Point2D(long x, long y) {
         this.x = x;
         this.y = y;
     }
 
-    static public Point of(int x, int y) {
-        return new Point(x, y);
+    static public Point2D of(long x, long y) {
+        return new Point2D(x, y);
     }
 
-    static public Point of(String xStr, String yStr) {
-        return Point.of(Integer.parseInt(xStr), Integer.parseInt(yStr));
+    static public Point2D of(String xStr, String yStr) {
+        return Point2D.of(Integer.parseInt(xStr), Integer.parseInt(yStr));
     }
 
-    static public Point ofSplit(String xyStr, String splitRegex) {
+    static public Point2D ofSplit(String xyStr, String splitRegex) {
         var split = xyStr.split(splitRegex);
-        return Point.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
+        return Point2D.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Point {
                ? false
                : this == obj
                  ? true
-                 : obj instanceof Point other
+                 : obj instanceof Point2D other
                    ? this.x == other.x && this.y == other.y
                    : false;
     }
