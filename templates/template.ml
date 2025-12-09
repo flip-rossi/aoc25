@@ -6,6 +6,10 @@
 *)
 (* open! Core *)
 
+open Lib
+
+let ( |>> ) = Utils.( |>> )
+
 (*(*(*(*(*(*(*(*(*( PART 1 )*)*)*)*)*)*)*)*)*)
 let part1 _ = raise (Invalid_argument "Part 1 not solved yet.")
 
@@ -25,11 +29,11 @@ let main () =
       | 1 -> part1
       | 2 -> part2
       | _ ->
-        print_endline "Part must be 1 or 2.";
+        Printf.eprintf "Part must be 1 or 2.\n";
         exit 1
     with
     | Invalid_argument _ ->
-      print_endline "Please specify the part to solve.";
+      Printf.eprintf "Please specify the part to solve.\n";
       exit 1
   in
   print_endline @@ string_of_int @@ (* Core.Tuple2.uncurry *) solve parsed_input

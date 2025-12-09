@@ -99,6 +99,7 @@ case "$lang" in
         ;;
     ocaml|ml)
         dune build &&
+            OCAMLRUNPARAM=b \
             run_solution "$OCAML_TARGET/day$day.exe"
         ;;
     tcl)

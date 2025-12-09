@@ -27,7 +27,7 @@ You can get your session token by looking at your cookies when logged on in the 
 
 > ☆ - part 1 done; ★ - parts 1 and 2 done.
 
-| Day                                                               |  Languages                 |
+| Day                                                               | Solution                   |
 |-------------------------------------------------------------------|----------------------------|
 | [Day 1: Secret Entrance](https://adventofcode.com/2025/day/1)     | [★ OCaml](./src/day01.ml)  |
 | [Day 2: Gift Shop](https://adventofcode.com/2025/day/2)           | [★ Tcl](./src/day02.tcl)   |
@@ -37,7 +37,7 @@ You can get your session token by looking at your cookies when logged on in the 
 | [Day 6: --](https://adventofcode.com/2025/day/6)                  |                            |
 | [Day 7: --](https://adventofcode.com/2025/day/7)                  |                            |
 | [Day 8: Playground](https://adventofcode.com/2025/day/8)          | [★ Java](./src/Day08.java) |
-| [Day 9: Movie Theater](https://adventofcode.com/2025/day/9)       | [☆ OCaml](./src/day09.ml)  |
+| [Day 9: Movie Theater](https://adventofcode.com/2025/day/9)       | [★ OCaml](./src/day09.ml)  |
 
 
 
