@@ -1,5 +1,5 @@
 (** Applies {!x} to {!f}, ignoring its result, and returns {!x}. Same as {!( |>> )}. *)
-let passthrough f x =
+let passthrough x f =
   ignore (f x);
   x
 ;;

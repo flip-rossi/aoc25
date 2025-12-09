@@ -35,7 +35,7 @@ You can get your session token by looking at your cookies when logged on in the 
 | [Day 4: Printing Department](https://adventofcode.com/2025/day/4) | [★ Tcl](./src/day04.tcl)   |
 | [Day 5: Cafeteria](https://adventofcode.com/2025/day/5)           | [★ OCaml](./src/day05.ml)  |
 | [Day 6: Trash Compactor](https://adventofcode.com/2025/day/6)     | [★ OCaml](./src/day06.ml)  |
-| [Day 7: --](https://adventofcode.com/2025/day/7)                  |                            |
+| [Day 7: Laboratories](https://adventofcode.com/2025/day/7)        | [☆ OCaml](./src/day07.ml)  |
 | [Day 8: Playground](https://adventofcode.com/2025/day/8)          | [★ Java](./src/Day08.java) |
 | [Day 9: Movie Theater](https://adventofcode.com/2025/day/9)       | [★ OCaml](./src/day09.ml)  |
 
