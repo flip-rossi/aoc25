@@ -1,7 +1,7 @@
 (executables
- (names day01)
- (public_names day01)
- (libraries utils core str re2)
+ (names day01 day05)
+ (public_names day01 day05)
+ (libraries lib core str re2)
  (preprocess (pps ppx_sexp_conv ppx_compare ppx_hash)))
 
 (env
