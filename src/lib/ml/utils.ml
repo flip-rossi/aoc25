@@ -1,9 +1,17 @@
+(** Applies {!x} to {!f}, ignoring its result, and returns {!x}. Same as {!( |>> )}. *)
 let passthrough f x =
   ignore (f x);
   x
 ;;
 
-let ( |>> ) x f = passthrough f x
+(** Evaluates {!_}, ignoring its result, and returns {!x}. Same as {!( |-> )}. *)
+let skip x _ = x
+
+(** Applies {!x} to {!f}, ignoring its result, and returns {!x}. Same as {!passthrough}. *)
+let ( |>> ) = passthrough
+
+(** Evaluates {!_}, ignoring its result, and returns {!x}. Same as {!skip}. *)
+let ( |-> ) = skip
 
 let bin_search_all cmp arr =
   let rec loop min max found =

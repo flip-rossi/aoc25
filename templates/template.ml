@@ -9,16 +9,17 @@
 open Lib
 
 let ( |>> ) = Utils.( |>> )
+let ( |-> ) = Utils.( |-> )
 
 (*(*(*(*(*(*(*(*(*( PART 1 )*)*)*)*)*)*)*)*)*)
-let part1 _ = raise (Invalid_argument "Part 1 not solved yet.")
+let part1 _ = raise (Invalid_argument "Part 1 not yet solved.")
 
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
-let part2 _ = raise (Invalid_argument "Part 2 not solved yet.")
+let part2 _ = raise (Invalid_argument "Part 2 not yet solved.")
 
 (*(*(*(*(*(*(*(*(*( PARSE INPUT )*)*)*)*)*)*)*)*)*)
 let parsed_input =
-  In_channel.input_lines In_channel.stdin |> List.map (fun line -> line)
+  In_channel.(input_lines stdin) |> List.map (fun line -> failwith "TODO")
 ;;
 
 (*(*(*(*(*(*(*(*(*( SOLVE )*)*)*)*)*)*)*)*)*)
