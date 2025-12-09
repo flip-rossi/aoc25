@@ -7,6 +7,7 @@
 (* open! Core *)
 
 open Lib
+open Printf
 
 let ( |>> ) = Utils.( |>> )
 let ( |-> ) = Utils.( |-> )

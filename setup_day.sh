@@ -69,7 +69,7 @@ case "$lang" in
 esac
 
 # Download personal input
-. .env # .env should contain the line `SESSION_TOKEN=yoursessiontoken`
+source .env # SESSION_TOKEN
 
 if [[ -e "$input_file" ]]; then
     echo "${input_file} already exists:"

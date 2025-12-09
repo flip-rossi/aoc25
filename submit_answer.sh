@@ -12,11 +12,10 @@ trap 'cleanup HUP' HUP
 trap 'cleanup TERM' TERM
 trap 'cleanup INT' INT
 
-# Load SESSION_TOKEN variable
-eval $(cat $(dirname $0)/.env)
+source .env # SESSION_TOKEN
 
 if [ -z $SESSION_TOKEN ]; then
-    echo "SESSION_TOKEN variable not defined in $(dirname $0)/.env"
+    echo "SESSION_TOKEN not defined. Try setting it in $(dirname $0)/.env"
     exit 1
 fi
 

@@ -2,16 +2,15 @@
    Day 7 - Laboratories
    https://adventofcode.com/2025/day/7
    Start:  2025-12-09 21:44
-   Finish: 2025-12-09 22:47, TODO
+   Finish: 2025-12-09 22:47, 22:56
 *)
 (* open! Core *)
 
 open Lib
 
-let ( |>> ) = Utils.( |>> )
-let ( |-> ) = Utils.( |-> )
-
-open Printf
+(* open Printf *)
+(* let ( |>> ) = Utils.( |>> ) *)
+(* let ( |-> ) = Utils.( |-> ) *)
 
 (*(*(*(*(*(*(*(*(*( PART 1 )*)*)*)*)*)*)*)*)*)
 let part1 map (i0, j0) =
@@ -40,7 +39,24 @@ let part1 map (i0, j0) =
 ;;
 
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
-let part2 _ = raise (Invalid_argument "Part 2 not yet solved.")
+let part2 map (i0, j0) =
+  let rec merge beams =
+    match beams with
+    | (b0, t0) :: (b1, t1) :: bs when b0 = b1 -> (b0, t0 + t1) :: merge bs
+    | _ -> beams
+  in
+  let rec loop i beams =
+    let rec step beams =
+      let beams = merge beams in
+      match beams with
+      | [] -> []
+      | (b, t) :: bs ->
+        if map.(i).(b) then (b - 1, t) :: (b + 1, t) :: step bs else (b, t) :: step bs
+    in
+    if i >= Array.length map then beams else loop (i + 1) (step beams)
+  in
+  loop i0 [ j0, 1 ] |> List.fold_left (fun acc (_b, t) -> acc + t) 0
+;;
 
 (*(*(*(*(*(*(*(*(*( PARSE INPUT )*)*)*)*)*)*)*)*)*)
 let parsed_input =
