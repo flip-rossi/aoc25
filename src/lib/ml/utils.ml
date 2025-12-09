@@ -1,1 +1,1 @@
-let ignore_fun f x = ignore (f x); x
+let passthrough f x = ignore (f x); x
