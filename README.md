@@ -13,7 +13,7 @@ Each solution is in [src/](src/), in either Java, Rust, C++, OCaml, or Tcl.
   Compiles and runs the solution in any language for the specified day (or today,
   if none is specified).
 
-[^.env]: You need to set the `SESSION_TOKEN` environment variable. You can do so by creating a .env file. You can get your AoC session token from your cookies after logging in. In case of run.sh, it's just needed to submit the solution.
+[^.env]: You need to set the `SESSION_TOKEN` environment variable. You can do so by creating a .env file. You can get your AoC session token from your cookies after logging in. In case of run.sh, it's just needed to automatically submit the solution.
 
 
 ## Solutions
@@ -31,6 +31,7 @@ Each solution is in [src/](src/), in either Java, Rust, C++, OCaml, or Tcl.
 | [Day 7: Laboratories](https://adventofcode.com/2025/day/7)        | [★ OCaml](./src/day07.ml)  |
 | [Day 8: Playground](https://adventofcode.com/2025/day/8)          | [★ Java](./src/Day08.java) |
 | [Day 9: Movie Theater](https://adventofcode.com/2025/day/9)       | [★ OCaml](./src/day09.ml)  |
+| [Day 10: Factory](https://adventofcode.com/2025/day/10)           | [☆ OCaml](./src/day10.ml)  |
 
 
 

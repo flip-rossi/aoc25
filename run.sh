@@ -125,7 +125,7 @@ submit_answer() {
 run_solution() {
     msg "time $@ $part < $input"
     answer=$( ( time "$@" "$part" < "$input" ) | tee /dev/tty | tail -1)
-    wl-copy -n "$answer"
+    wl-copy -n -- "$answer"
 
     if $submit; then
         submit_answer $answer
