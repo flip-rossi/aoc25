@@ -9,14 +9,11 @@ Each solution is in [src/](src/), in either Java, Rust, C++, OCaml, or Tcl.
 - [setup_day.sh](setup_day.sh)[^.env]  
   Creates a new source code file in [src/](src/) from one of the templates in templates/
   and downloads the day's input to inputs/.
-- [submit_answer.sh](submit_answer.sh)[^.env]  
-  Submits the answer for the day and selected puzzle part.
-  If no answer is passed as argument, reads from clipboard.
-- [run.sh](run.sh)  
+- [run.sh](run.sh)[^.env]  
   Compiles and runs the solution in any language for the specified day (or today,
   if none is specified).
 
-[^.env]: You need to set the `SESSION_TOKEN` environment variable. You can do so by creating a .env file. You can get your AoC session token from your cookies after logging in.
+[^.env]: You need to set the `SESSION_TOKEN` environment variable. You can do so by creating a .env file. You can get your AoC session token from your cookies after logging in. In case of run.sh, it's just needed to submit the solution.
 
 
 ## Solutions

@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
+YEAR=2025
+
+SRC_DIR="src"
+TEMPLATE_DIR="templates"
+
 bad_args() {
     echo "USAGE: $0 <language> [day]"
     exit 1
 }
-
-SRC_DIR="src"
-TEMPLATE_DIR="templates"
 
 if [[ $# == 0 ]]; then
     bad_args
@@ -27,7 +29,7 @@ fi
 mkdir -p inputs/
 input_file="inputs/input${day_padded}.txt"
 day=$((10#$day_padded))
-url="https://adventofcode.com/2025/day/${day}"
+url="https://adventofcode.com/${YEAR}/day/${day}"
 shift
 
 # Create source code file
