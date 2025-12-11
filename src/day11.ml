@@ -2,34 +2,58 @@
    Day 11 - Reactor
    https://adventofcode.com/2025/day/11
    Start:  2025-12-11 12:54
-   Finish: 2025-12-11 13:13, TODO
+   Finish: 2025-12-11 13:13, 14:06
 *)
-(* open! Core *)
 
 open Lib
-open Printf
+(* open Printf *)
 
-let ( |>> ) = Utils.( |>> )
-let ( |-> ) = Utils.( |-> )
+(* let ( |>> ) = Utils.( |>> ) *)
+(* let ( |-> ) = Utils.( |-> ) *)
 
 type device =
   { n_paths : int option
   ; outs : string list
   }
 
-(*(*(*(*(*(*(*(*(*( PART 1 )*)*)*)*)*)*)*)*)*)
-let part1 devices =
-  let rec paths_from dev =
-    let {n_paths; outs} = Hashtbl.find devices dev in
-    match n_paths with
-    | Some count -> count
-    | None -> List.fold_left (fun acc dev -> acc + paths_from dev) 0 outs
-  in
-  paths_from "you"
+let rec paths_from devices dev =
+  let { n_paths; outs } = Hashtbl.find devices dev in
+  match n_paths with
+  | Some count -> count
+  | None ->
+    let n_paths = List.fold_left (fun acc d -> acc + paths_from devices d) 0 outs in
+    Hashtbl.replace devices dev { n_paths = Some n_paths; outs };
+    n_paths
+;;
 
+(*(*(*(*(*(*(*(*(*( PART 1 )*)*)*)*)*)*)*)*)*)
+let part1 devices = paths_from devices "you"
 
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
-let part2 _ = raise (Invalid_argument "Part 2 not yet solved.")
+let part2 devices =
+  let rec has_path_to_fft dev =
+    if dev = "fft"
+    then true
+    else (
+      let { outs; _ } = Hashtbl.find devices dev in
+      if outs = []
+      then false
+      else List.fold_left (fun acc dev -> acc || has_path_to_fft dev) false outs)
+  in
+  let cancel_found_devices new_goal base_n =
+    Hashtbl.filter_map_inplace
+      (fun _dev { n_paths; outs } ->
+        match n_paths with
+        | None -> Some { n_paths; outs }
+        | Some _ -> Some { n_paths = Some 0; outs })
+      devices;
+    Hashtbl.replace devices new_goal { n_paths = Some base_n; outs = [] }
+  in
+  let first, second = if has_path_to_fft "dac" then "dac", "fft" else "fft", "dac" in
+  cancel_found_devices second (paths_from devices second);
+  cancel_found_devices first (paths_from devices first);
+  paths_from devices "svr"
+;;
 
 (*(*(*(*(*(*(*(*(*( PARSE INPUT )*)*)*)*)*)*)*)*)*)
 let parsed_input =

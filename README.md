@@ -32,7 +32,7 @@ Each solution is in [src/](src/), in either Java, Rust, C++, OCaml, or Tcl.
 | [Day 8: Playground](https://adventofcode.com/2025/day/8)          | [★ Java](./src/Day08.java) |
 | [Day 9: Movie Theater](https://adventofcode.com/2025/day/9)       | [★ OCaml](./src/day09.ml)  |
 | [Day 10: Factory](https://adventofcode.com/2025/day/10)           | [☆ OCaml](./src/day10.ml)  |
-| [Day 11: Reactor](https://adventofcode.com/2025/day/10)           | [☆ OCaml](./src/day11.ml)  |
+| [Day 11: Reactor](https://adventofcode.com/2025/day/10)           | [★ OCaml](./src/day11.ml)  |
 
 
 
