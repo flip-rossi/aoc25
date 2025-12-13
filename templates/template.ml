@@ -12,6 +12,15 @@ open Printf
 let ( |>> ) = Utils.( |>> )
 let ( |-> ) = Utils.( |-> )
 
+(** {!o |? f} is {!Option.map f o}. *)
+let ( |? ) o f = Option.map f o
+
+(** {!o |?* f} is {!Option.bind o f}, or {!Option.join (o |? f)}. *)
+let ( |?* ) = Option.bind
+
+(** {!let} binding for {!Option.bind}. *)
+let ( let* ) = Option.bind
+
 (*(*(*(*(*(*(*(*(*( PART 1 )*)*)*)*)*)*)*)*)*)
 let part1 _ = raise (Invalid_argument "Part 1 not yet solved.")
 

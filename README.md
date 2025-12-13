@@ -18,7 +18,7 @@ Each solution is in [src/](src/), in either Java, Rust, C++, OCaml, Tcl, or Pyth
 
 ## Solutions
 
-> ☆ - part 1 done; ★ - parts 1 and 2 done.
+> ☆ - part 1 done; ★ - all done.
 
 | Day                                                                 | Solution                   |
 |---------------------------------------------------------------------|----------------------------|
@@ -31,9 +31,9 @@ Each solution is in [src/](src/), in either Java, Rust, C++, OCaml, Tcl, or Pyth
 | [Day 7: Laboratories](https://adventofcode.com/2025/day/7)          | [★ OCaml](./src/day07.ml)  |
 | [Day 8: Playground](https://adventofcode.com/2025/day/8)            | [★ Java](./src/Day08.java) |
 | [Day 9: Movie Theater](https://adventofcode.com/2025/day/9)         | [★ OCaml](./src/day09.ml)  |
-| [Day 10: Factory](https://adventofcode.com/2025/day/10)             | [☆ OCaml](./src/day10.ml)  |
+| [Day 10: Factory](https://adventofcode.com/2025/day/10)             | [★ OCaml](./src/day10.ml)  |
 | [Day 11: Reactor](https://adventofcode.com/2025/day/11)             | [★ OCaml](./src/day11.ml)  |
-| [Day 12: Christmas Tree Farm](https://adventofcode.com/2025/day/12) | [☆ Python](./src/day12.py) |
+| [Day 12: Christmas Tree Farm](https://adventofcode.com/2025/day/12) | [★ Python](./src/day12.py) |
 
 
 

@@ -6,8 +6,14 @@
 
 (package
  (name aoc25)
- (depends ocaml dune (core (= v0.17.1)) menhir ocamllex re2 ppx_hash))
+ (depends
+   ocaml dune
+   core
+   ; menhir ocamllex
+   ; re2
+   ; ppx_hash
+   z3))
 
-(using menhir 3.0)
+; (using menhir 3.0)
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html

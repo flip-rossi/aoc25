@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 from sys import stdin
 
-##### PART 1 #####
-
 # Huge troll
 
 def read_shape_area() -> int:

@@ -3,11 +3,8 @@ opam-version: "2.0"
 depends: [
   "ocaml"
   "dune" {>= "3.16"}
-  "core" {= "v0.17.1"}
-  "menhir"
-  "ocamllex"
-  "re2"
-  "ppx_hash"
+  "core"
+  "z3"
   "odoc" {with-doc}
 ]
 build: [

@@ -2,9 +2,8 @@
    Day 10 - Factory
    https://adventofcode.com/2025/day/10
    Start:  2025-12-10 11:54
-   Finish: 2025-12-10 13:04
+   Finish: 2025-12-10 13:04, 2025-12-13 14:06
 *)
-(* open! Core *)
 
 open Lib
 open Printf
@@ -17,10 +16,11 @@ let ( |-> ) = Utils.( |-> )
 
 type machine =
   { lightreq : int
-  ; buttons : int list
+  ; buttons : int list list
   ; joltreq : int list
   }
 
+let buttons_to_bin = List.map (List.fold_left (fun acc x -> acc + (1 lsl x)) 0)
 let int_size = Sys.word_size - 1
 
 (** @author nojb from https://discuss.ocaml.org/t/pretty-printing-binary-ints/9062/7 *)
@@ -41,7 +41,7 @@ let string_of_machine { lightreq; buttons; joltreq } =
   Printf.sprintf
     "{ lightreq:%s; buttons:%s; joltreq:%s }"
     (int2bin lightreq)
-    (Debug.list int2bin buttons)
+    (Debug.list int2bin (buttons_to_bin buttons))
     (Debug.list string_of_int joltreq)
 ;;
 
@@ -67,77 +67,55 @@ let part1 machines =
   in
   List.fold_left
     (fun acc { lightreq; buttons; _ } ->
-      (* req := lightreq; *)
-      acc + Option.get (min_switches lightreq buttons))
+       (* req := lightreq; *)
+       acc + Option.get (min_switches lightreq (buttons_to_bin buttons)))
     0
     machines
 ;;
 
-(** {!o |? f} is {!Option.map f o}. *)
-let ( |? ) o f = Option.map f o
-
-(** {!o |?* f} is {!Option.bind o f}, or {!Option.join (o |? f)}. *)
-let ( |?* ) = Option.bind
-
-(** {!let} binding for {!Option.bind}. *)
-let ( let* ) = Option.bind
-
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
 let part2 machines =
-  let dec_jolt self button joltage =
-    match joltage with
-    | [] -> Some []
-    | j :: js ->
-      if button = 0
-      then Some joltage
-      else (
-        let new_j = j - (button land 1) in
-        if new_j < 0
-        then (* printf "Failed switching jolts\n"; *)
-          None
-        else
-          let* new_js = self (button lsr 1) js in
-          Some (new_j :: new_js))
+  (* Z3 OCaml docs: https://z3prover.github.io/api/html/ml/Z3.html *)
+  let open Z3 in
+  let module Arith = Z3.Arithmetic in
+  (* let cfg = [ "model", "true"; "proof", "false" ] in *)
+  let cfg = [] in
+  let ctx = mk_context cfg in
+  let intsort = Arith.Integer.mk_sort ctx in
+  let zero = Arith.Integer.mk_numeral_i ctx 0 in
+  let solve_machine { buttons; joltreq; _ } =
+    let consts =
+      List.to_seq buttons
+      |> Stdlib.Seq.mapi (fun i _b ->
+        let sym = Symbol.mk_int ctx i in
+        Expr.mk_const ctx sym intsort)
+      |> List.of_seq
+    in
+    let eqs =
+      List.to_seq joltreq
+      |> Stdlib.Seq.(
+           mapi (fun i jolt ->
+             Boolean.mk_eq
+               ctx
+               (Arith.Integer.mk_numeral_i ctx jolt)
+               (Arith.mk_add
+                  ctx
+                  (zip (List.to_seq buttons) (List.to_seq consts)
+                   |> filter_map (fun (btn, const) ->
+                     if List.exists (( = ) i) btn then Some const else None)
+                   |> List.of_seq))))
+      |> List.of_seq
+    in
+    let opt = Optimize.mk_opt ctx in
+    Optimize.add opt (List.map (fun const -> Arith.mk_ge ctx const zero) consts);
+    Optimize.add opt eqs;
+    let handle = Optimize.minimize opt (Arith.mk_add ctx consts) in
+    let _status = Optimize.check opt in
+    let lower = Optimize.get_lower handle in
+    (* printf "lower %s\n" (Expr.to_string lower); *)
+    int_of_string (Expr.to_string lower)
   in
-  let dec_jolt = Memo.memo_rec dec_jolt in
-  let dbg_req = ref 0 in
-  let rec min_switches buttons joltreq =
-    if (* printf *)
-      (*    "FOUND LIGHT FOR %s! JOLT IS %s\n" *)
-      (*    (int2bin !req) *)
-      (*    (Debug.list string_of_int joltreq); *)
-       List.for_all (( = ) 0) joltreq
-    then (
-      printf "FOUND GOAL FOR %s!\n" (int2bin !dbg_req);
-      Some 0)
-    else (
-      match buttons with
-      | b :: bs ->
-        (* printf "%s SWITCH %s = %s\n" (int2bin goal) (int2bin b) (int2bin (goal lxor b)); *)
-        let switched =
-          let* new_jolt = dec_jolt b joltreq in
-          (* printf *)
-          (*   "Swtiched %s to %s after pressing %s\n" *)
-          (*   (Debug.list string_of_int joltreq) *)
-          (*   (Debug.list string_of_int new_jolt) *)
-          (*   (int2bin b); *)
-          min_switches buttons new_jolt |? ( + ) 1
-        in
-        let skipped = min_switches bs joltreq in
-        (match switched, skipped with
-         | Some x, Some y -> Some (min x y)
-         | Some x, None | None, Some x -> Some x
-         | None, None -> None)
-      | [] -> None)
-  in
-  List.fold_left
-    (fun acc { lightreq; buttons; joltreq } ->
-      dbg_req := lightreq;
-      acc
-      + (Option.get (min_switches buttons joltreq)
-         |>> printf "FOR %s GOT %d\n" (int2bin lightreq)))
-    0
-    machines
+  List.fold_left (fun acc m -> acc + solve_machine m) 0 machines
 ;;
 
 (*(*(*(*(*(*(*(*(*( PARSE INPUT )*)*)*)*)*)*)*)*)*)
@@ -145,11 +123,7 @@ let parsed_input =
   let parse_button s =
     String.sub s 1 (String.length s - 2)
     |> String.split_on_char ','
-    |> List.fold_left
-         (fun acc xstr ->
-           let x = int_of_string xstr in
-           acc + (1 lsl x))
-         0
+    |> List.map int_of_string
   in
   let parse_jolt s =
     String.sub s 1 (String.length s - 2)
@@ -163,12 +137,12 @@ let parsed_input =
     let lightreq =
       String.fold_right
         (fun c acc ->
-          (acc lsl 1)
-          +
-          match c with
-          | '.' -> 0
-          | '#' -> 1
-          | _ -> failwith "Error parsing light requirement.")
+           (acc lsl 1)
+           +
+           match c with
+           | '.' -> 0
+           | '#' -> 1
+           | _ -> failwith "Error parsing light requirement.")
         lightstr
         0
     in
@@ -177,9 +151,9 @@ let parsed_input =
       List.to_seq ss
       |> Seq.fold_lefti
            (fun (accbs, accj) i s ->
-             if i == List.length ss - 1
-             then accbs, parse_jolt s
-             else parse_button s :: accbs, accj)
+              if i == List.length ss - 1
+              then accbs, parse_jolt s
+              else parse_button s :: accbs, accj)
            ([], [])
     in
     { lightreq; buttons; joltreq } |>> fun m -> print_endline @@ string_of_machine m
@@ -202,7 +176,11 @@ let main () =
       Printf.eprintf "Please specify the part to solve.\n";
       exit 1
   in
-  print_endline @@ string_of_int @@ (* Core.Tuple2.uncurry *) solve parsed_input
+  print_endline
+  @@ string_of_int
+  @@
+  (* Core.Tuple2.uncurry *)
+  solve parsed_input
 ;;
 
 main ()
