@@ -84,54 +84,77 @@ let ( let* ) = Option.bind
 
 (*(*(*(*(*(*(*(*(*( PART 2 )*)*)*)*)*)*)*)*)*)
 let part2 machines =
-  let dec_jolt self button joltage =
-    match joltage with
-    | [] -> Some []
-    | j :: js ->
-      if button = 0
-      then Some joltage
-      else (
-        let new_j = j - (button land 1) in
-        if new_j < 0
-        then (* printf "Failed switching jolts\n"; *)
-          None
-        else
-          let* new_js = self (button lsr 1) js in
-          Some (new_j :: new_js))
+  let max_presses btn jolts =
+    let rec loop btn jolts acc =
+      match jolts with
+      | j :: js -> loop (btn lsr 1) js (if btn land 1 = 1 then min acc j else acc)
+      | [] -> acc
+    in
+    loop btn jolts Int.max_int
+    (* |>> *)
+    (* printf *)
+    (*   "max_presses of %s on %s is %d\n" *)
+    (*   (int2bin btn) *)
+    (*   (Debug.list string_of_int jolts) *)
   in
-  let dec_jolt = Memo.memo_rec dec_jolt in
+  let rec dec_jolt btn joltage amount =
+    match joltage with
+    | [] -> []
+    | j :: js ->
+      if btn = 0
+      then joltage
+      else (
+        let new_j = j - (btn land 1 * amount) in
+        if new_j < 0
+        then failwith "Not supposed to happen..."
+        else (
+          let new_js = dec_jolt (btn lsr 1) js amount in
+          new_j :: new_js))
+  in
   let dbg_req = ref 0 in
-  let rec min_switches buttons joltreq =
-    if (* printf *)
-      (*    "FOUND LIGHT FOR %s! JOLT IS %s\n" *)
-      (*    (int2bin !req) *)
-      (*    (Debug.list string_of_int joltreq); *)
-       List.for_all (( = ) 0) joltreq
-    then (
-      printf "FOUND GOAL FOR %s!\n" (int2bin !dbg_req);
-      Some 0)
+  let rec min_switches buttons joltage =
+    if List.for_all (( = ) 0) joltage
+    then Some 0
     else (
       match buttons with
-      | b :: bs ->
-        (* printf "%s SWITCH %s = %s\n" (int2bin goal) (int2bin b) (int2bin (goal lxor b)); *)
-        let switched =
-          let* new_jolt = dec_jolt b joltreq in
-          (* printf *)
-          (*   "Swtiched %s to %s after pressing %s\n" *)
-          (*   (Debug.list string_of_int joltreq) *)
-          (*   (Debug.list string_of_int new_jolt) *)
-          (*   (int2bin b); *)
-          min_switches buttons new_jolt |? ( + ) 1
-        in
-        let skipped = min_switches bs joltreq in
-        (match switched, skipped with
-         | Some x, Some y -> Some (min x y)
-         | Some x, None | None, Some x -> Some x
-         | None, None -> None)
+      | b :: bn :: bs ->
+        (* let rec try_with_presses n = *)
+        (*   if n = 0 *)
+        (*   then min_switches bs joltage *)
+        (*   else ( *)
+        (*     let new_jolts = dec_jolt b joltage n in *)
+        (*     (* printf "New jolts: %s\n" (Debug.list string_of_int new_jolts); *) *)
+        (*     match min_switches bs new_jolts with *)
+        (*     | None -> *)
+        (*       (* printf "%s * %d failed\n" (int2bin b) n; *) *)
+        (*       try_with_presses (n - 1) *)
+        (*     | Some x -> Some (x + n)) *)
+        (* in *)
+        (* try_with_presses (max_presses b joltage) *)
+        let new_jolts = dec_jolt b joltage (max_presses b joltage) in
+        (match min_switches (bn :: bs) new_jolts with
+         | None -> min_switches (bn :: b :: bs) joltage
+          | x -> x
+        )
+      | [ b ] ->
+        let new_jolts = dec_jolt b joltage (max_presses b joltage) in
+        if List.for_all (( = ) 0) new_jolts then Some 0 else None
       | [] -> None)
+  in
+  let btn_size max b =
+    let rec loop max b size =
+      if max = 0 then size else loop (max - 1) (b lsr 1) (size + (b land 1))
+    in
+    loop max b 0 (* |>> printf "btn:%s size:%d\n" (int2bin b) *)
   in
   List.fold_left
     (fun acc { lightreq; buttons; joltreq } ->
+      let len = List.length joltreq in
+      let buttons =
+        List.sort
+          (fun a b -> (* Largest to smallest *) btn_size len b - btn_size len a)
+          buttons
+      in
       dbg_req := lightreq;
       acc
       + (Option.get (min_switches buttons joltreq)
