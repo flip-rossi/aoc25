@@ -11,7 +11,6 @@ OCAML_TARGET=./_build/default/src
 JAVA_CLASSPATH=./target/java/classes
 JAVA_CLASSPATH_FILE=./target/java/mvn-classpath.txt
 CPP_TARGET=./target/cpp
-TCL_TARGET=./src
 
 print_help() {
     echo \
@@ -79,7 +78,7 @@ part=$1
 shift
 
 if [[ ! -v lang ]]; then
-    src=$(fd "day$day" | head -1)
+    src=$(fd "day$day" "$SRC_DIR" | head -1)
 
     if [[ -z "$src" ]]; then
         msg "Didn't find any source files for day $day."
@@ -152,7 +151,10 @@ case "$lang" in
         ;;
     tcl)
         TCLLIBPATH="{$(realpath $LIB_DIR)/tcl} $TCLLIBPATH" \
-            run_solution "$TCL_TARGET/day$day.tcl"
+            run_solution "$SRC_DIR/day$day.tcl"
+        ;;
+    py|python)
+        run_solution "$SRC_DIR/day$day.py"
         ;;
     *)
         msg "Language '$lang' not supported."
