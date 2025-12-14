@@ -1,7 +1,7 @@
 # Advent of Code 2025 solutions
 
 These are my solutions for the [2025 edition](https://adventofcode.com/2025) of the annual event **Advent of Code**.
-Each solution is in [src/](src/), in either Java, Rust, C++, OCaml, Tcl, or Python.
+Each solution is in [src/](src/), in either Java, Rust, C++, OCaml, Tcl, Python, or... Nix :P.
 
 
 ## Helper scripts
@@ -22,7 +22,7 @@ Each solution is in [src/](src/), in either Java, Rust, C++, OCaml, Tcl, or Pyth
 
 | Day                                                                 | Solution                   |
 |---------------------------------------------------------------------|----------------------------|
-| [Day 1: Secret Entrance](https://adventofcode.com/2025/day/1)       | [★ OCaml](./src/day01.ml), [☆ Nix](./src/day01.nix) |
+| [Day 1: Secret Entrance](https://adventofcode.com/2025/day/1)       | [★ OCaml](./src/day01.ml), [★ Nix](./src/day01.nix) |
 | [Day 2: Gift Shop](https://adventofcode.com/2025/day/2)             | [★ Tcl](./src/day02.tcl)   |
 | [Day 3: Lobby](https://adventofcode.com/2025/day/3)                 | [★ Tcl](./src/day03.tcl)   |
 | [Day 4: Printing Department](https://adventofcode.com/2025/day/4)   | [★ Tcl](./src/day04.tcl)   |

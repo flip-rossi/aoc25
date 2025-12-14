@@ -7,7 +7,7 @@
 # Run with, e.g.:
 # nix eval -f ./src/dayX.nix --arg-from-stdin input partY < ./inputs/inputX.txt
 { input, pkgs ? import <nixpkgs> { }
-, utils ? import ./lib/nix/utils.nix { inherit pkgs; } }:
+, utils ? import ./lib/nix { inherit pkgs; } }:
 let
   inherit (pkgs) lib;
 
@@ -18,6 +18,7 @@ let
 
   part2 = _: builtins.throw "TODO: part 1 not yet done.";
 in {
+  # Parsed input available as attribute for debugging with `nix eval`
   inherit parsedInput;
 
   part1 = part1 parsedInput;
