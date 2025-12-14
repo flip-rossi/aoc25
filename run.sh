@@ -122,8 +122,8 @@ submit_answer() {
 }
 
 run_solution() {
-    msg "time $@ $part < $input"
-    answer=$( ( time "$@" "$part" < "$input" ) | tee /dev/tty | tail -1)
+    msg "time $@ < $input"
+    answer=$( ( time "$@" < "$input" ) | tee /dev/tty | tail -1)
     wl-copy -n -- "$answer"
 
     if $submit; then
@@ -134,27 +134,31 @@ run_solution() {
 case "$lang" in
     java|j)
         mvn compile -DincludeScope=compile -Dmdep.outputFile=$JAVA_CLASSPATH_FILE dependency:build-classpath &&
-            run_solution java -cp "$JAVA_CLASSPATH:`cat $JAVA_CLASSPATH_FILE`" "Day$day"
+            run_solution java -cp "$JAVA_CLASSPATH:`cat $JAVA_CLASSPATH_FILE`" "Day$day" "$part"
         ;;
     rs|r|rust)
         cargo build --bin "day$day" &&
-            run_solution "$RUST_TARGET/day$day"
+            run_solution "$RUST_TARGET/day$day" "$part"
         ;;
     cpp|c|c++)
         make "day$day" &&
-            run_solution "$CPP_TARGET/day$day"
+            run_solution "$CPP_TARGET/day$day" "$part"
         ;;
     ocaml|ml)
         dune build &&
             OCAMLRUNPARAM=b \
-            run_solution "$OCAML_TARGET/day$day.exe"
+            run_solution "$OCAML_TARGET/day$day.exe" "$part"
         ;;
     tcl)
         TCLLIBPATH="{$(realpath $LIB_DIR)/tcl} $TCLLIBPATH" \
-            run_solution "$SRC_DIR/day$day.tcl"
+            run_solution "$SRC_DIR/day$day.tcl" "$part"
         ;;
     py|python)
-        run_solution "$SRC_DIR/day$day.py"
+        run_solution "$SRC_DIR/day$day.py" "$part"
+        ;;
+    nix)
+        run_solution \
+            nix eval -f "$SRC_DIR/day$day.nix" --arg-from-stdin input "part$part"
         ;;
     *)
         msg "Language '$lang' not supported."

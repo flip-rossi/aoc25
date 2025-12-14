@@ -70,8 +70,14 @@ case "$lang" in
         template_file="$TEMPLATE_DIR/template.py"
         language_pretty="Python"
         ;;
+    nix)
+        lang=nix
+        src_file="$SRC_DIR/day$day_padded.nix"
+        template_file="$TEMPLATE_DIR/template.nix"
+        language_pretty="Nix"
+        ;;
     *)
-        echo "Available languages: java|j, rust|rs|r, c++|cpp|c, ocaml|ml, tcl, py|python"
+        echo "Available languages: java|j, rust|rs|r, c++|cpp|c, ocaml|ml, tcl, py|python, nix"
         exit 1
         ;;
 esac
@@ -126,6 +132,7 @@ else
             sed -E -i 's/\((names|public_names)(.*)\)/\(\1\2 '"day$day_padded"'\)/' "$SRC_DIR/dune"
             dune build
             ;;
+        # Interpreted languages
         tcl|py)
             chmod +x "$src_file"
             ;;
